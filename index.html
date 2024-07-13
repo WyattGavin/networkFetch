@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/header.css">
+    <link rel="stylesheet" href="/css/location.css">
+    <title>Document</title>
+    <style>
+        body {
+            padding: 0;
+            margin: 0;
+        }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", async () => {
+            async function getIpInfo() {
+                try {
+                    const ipResponse = await fetch('http://ipinfo.io/json?token=c2ddb311a5d484');
+                    if (!ipResponse.ok) {
+                        throw new Error('Network response was not ok: ' + ipResponse.statusText);
+                    }
+                    const ipData = await ipResponse.json();
+                    console.log(ipData);
+                    getWeatherInfo(ipData);
+                } catch (error) {
+                    console.error('There has been a problem with your fetch operation:', error);
+                }
+            }
+
+            async function getWeatherInfo(ipData) {
+                try {
+                    const weatherResponse = await fetch(`https://api.tomorrow.io/v4/weather/forecast?location=${ipData.loc}&apikey=Ll8X1n5maMTzkXipWvReSyWh00cciJu9`);
+                    if (!weatherResponse.ok) {
+                        throw new Error('Weather response was not ok: ' + weatherResponse.statusText);
+                    }
+                    const weatherData = await weatherResponse.json();
+                    console.log(weatherData);
+                    const currentDegC = weatherData.timelines.minutely[0].values.temperature;
+                    const currentDegF = currentDegC * 1.8 + 32;
+                    console.log(`${currentDegF} deg F`);
+                } catch (error) {
+                    console.error('There has been a problem with your fetch operation:', error);
+                }
+            }
+
+            getIpInfo();
+        });
+    </script>
+</head>
+<body>
+    <header>
+        <section class="container header main">
+            <div class="row header main">
+                <div class="col header main">
+                    <h1>Welcome</h1>
+                </div>
+            </div>
+        </section>
+    </header>
+    <main>
+        <section class="container main">
+            <div class="row main">
+                <div class="col location">
+                    <div id="ip_results"></div>
+                </div>
+                <div class="col weather">
+                    <div id="weather_results"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

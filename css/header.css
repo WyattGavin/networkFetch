@@ -1,0 +1,8 @@
+.container.header.main {
+    display: flex;
+    justify-content: center;
+}
+.row.header.main {
+    border: 1px solid black;
+    width: 100%;
+}
